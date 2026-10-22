@@ -1,4 +1,4 @@
-```yaml
+
 name: Deploy InternBoard to GitHub Pages
 
 on:
@@ -53,4 +53,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-```
+
