@@ -1,0 +1,28 @@
+{
+  "data": [
+    {
+      "id": "internship-1",
+      "title": "Full Stack Development Intern",
+      "company": "Edvyro",
+      "location": "Remote",
+      "stipend": 15000,
+      "duration": "3 months",
+      "category": "Engineering"
+    },
+    {
+      "id": "internship-2",
+      "title": "Frontend Engineering Intern",
+      "company": "Northstar Labs",
+      "location": "Hybrid · Bengaluru",
+      "stipend": 18000,
+      "duration": "4 months",
+      "category": "Engineering"
+    }
+  ],
+  "scenarios": [
+    { "name": "loading", "expected": "Show progress while the internship API responds." },
+    { "name": "filtering", "query": { "search": "frontend", "location": "Bengaluru" }, "expectedCount": 1 },
+    { "name": "empty", "query": { "search": "no-such-role" }, "expectedCount": 0 },
+    { "name": "application-validation", "invalidEmail": "not-an-email", "expectedStatus": 400 }
+  ]
+}

@@ -1,0 +1,25 @@
+:root {
+  font-family: 'DM Sans', sans-serif;
+  color: #111c3f;
+  background: #f8faff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-size: 14px;
+  --blue: #1264e8;
+  --navy: #101a3c;
+  --muted: #73809d;
+  --line: #e8edf5;
+}
+
+* { box-sizing: border-box; }
+body { min-width: 360px; min-height: 100vh; margin: 0; }
+button, input, textarea { font: inherit; }
+button { color: inherit; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px solid #85b6ff; outline-offset: 2px; }
+button:disabled { cursor: wait; opacity: .7; }
+h1, h2, h3, p { margin-top: 0; }
+h1, h2, h3, strong { font-family: 'Manrope', sans-serif; }

@@ -1,0 +1,10 @@
+TASK 04 STARTER CHECKLIST
+
+[ ] Start the frontend and API.
+[ ] Load internship data and show loading, empty, error, and retry states.
+[ ] Search internships by role, company, skill, and location.
+[ ] Validate the application in the browser and on the server.
+[ ] Confirm rate limits and secure response headers.
+[ ] Run unit and integration tests; save the report in the repository.
+[ ] Add a short security checklist and setup instructions.
+[ ] Submit one public or view-only GitHub repository URL.
