@@ -3,7 +3,17 @@ import { ArrowLeft, ArrowRight, BriefcaseBusiness, CheckCircle2, Clock3 } from '
 import { api } from '../services/api.js';
 import { validateApplication } from '../utils/validators.js';
 
-const emptyValues = { name: '', email: '', portfolioUrl: '', message: '' };
+const emptyValues = {
+  name: '',
+  email: '',
+  phone: '',
+  college: '',
+  course: '',
+  skills: '',
+  resumeUrl: '',
+  portfolioUrl: '',
+  message: ''
+};
 
 export default function ApplyPage({ internship, token, displayName, onBack, onApplySuccess, onViewApplications }) {
   const [values, setValues] = useState({ ...emptyValues, name: displayName });
@@ -25,6 +35,9 @@ export default function ApplyPage({ internship, token, displayName, onBack, onAp
       setApplication(result.data);
       onApplySuccess?.();
     } catch (requestError) {
+      if (requestError.details?.length) {
+        setErrors(Object.fromEntries(requestError.details.map(({ field, message }) => [field, message])));
+      }
       setError(requestError.message || 'Could not submit your application. Please try again.');
     } finally {
       setSubmitting(false);
@@ -64,6 +77,15 @@ export default function ApplyPage({ internship, token, displayName, onBack, onAp
                   <label>Full name<input value={values.name} onChange={(event) => setValues({ ...values, name: event.target.value })} placeholder="Your name" maxLength={80} aria-invalid={Boolean(errors.name)} />{errors.name && <small className="field-error">{errors.name}</small>}</label>
                   <label>Email address<input type="email" value={values.email} onChange={(event) => setValues({ ...values, email: event.target.value })} placeholder="you@example.com" maxLength={254} aria-invalid={Boolean(errors.email)} />{errors.email && <small className="field-error">{errors.email}</small>}</label>
                 </div>
+                <div className="form-grid">
+                  <label>Phone number<input type="tel" value={values.phone} onChange={(event) => setValues({ ...values, phone: event.target.value })} placeholder="+1 415 555 0134" maxLength={24} autoComplete="tel" aria-invalid={Boolean(errors.phone)} />{errors.phone && <small className="field-error">{errors.phone}</small>}</label>
+                  <label>College name<input value={values.college} onChange={(event) => setValues({ ...values, college: event.target.value })} placeholder="Your college or university" maxLength={120} aria-invalid={Boolean(errors.college)} />{errors.college && <small className="field-error">{errors.college}</small>}</label>
+                </div>
+                <div className="form-grid">
+                  <label>Course or degree<input value={values.course} onChange={(event) => setValues({ ...values, course: event.target.value })} placeholder="BSc Computer Science" maxLength={120} aria-invalid={Boolean(errors.course)} />{errors.course && <small className="field-error">{errors.course}</small>}</label>
+                  <label>Skills<input value={values.skills} onChange={(event) => setValues({ ...values, skills: event.target.value })} placeholder="React, research, data analysis" maxLength={500} aria-invalid={Boolean(errors.skills)} />{errors.skills && <small className="field-error">{errors.skills}</small>}</label>
+                </div>
+                <label>Resume URL<input type="url" value={values.resumeUrl} onChange={(event) => setValues({ ...values, resumeUrl: event.target.value })} placeholder="https://example.com/resume.pdf" maxLength={2048} aria-invalid={Boolean(errors.resumeUrl)} />{errors.resumeUrl && <small className="field-error">{errors.resumeUrl}</small>}</label>
                 <label>Portfolio URL <span className="optional-label">Optional</span><input value={values.portfolioUrl} onChange={(event) => setValues({ ...values, portfolioUrl: event.target.value })} placeholder="https://yourportfolio.com" maxLength={2048} aria-invalid={Boolean(errors.portfolioUrl)} />{errors.portfolioUrl && <small className="field-error">{errors.portfolioUrl}</small>}</label>
                 <label>Why are you interested?<textarea value={values.message} onChange={(event) => setValues({ ...values, message: event.target.value })} placeholder="Tell us about your interest and relevant experience…" rows={5} maxLength={1200} aria-invalid={Boolean(errors.message)} />{errors.message && <small className="field-error">{errors.message}</small>}</label>
                 {error && <p className="form-error" role="alert">{error}</p>}

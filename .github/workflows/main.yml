@@ -39,12 +39,15 @@ jobs:
         run: npm test
         working-directory: secure-application-integration
 
-     
+      - name: Require deployed API URL
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+        run: test -n "$VITE_API_URL"
       - name: Build React application
         run: npm run build
         working-directory: secure-application-integration
         env:
-          VITE_API_URL: https://secure-application-integration-api.onrender.com/api
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
 
 
 

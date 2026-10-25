@@ -1,6 +1,6 @@
 # Secure Application Integration
 
-A full-stack internship portal with account registration and login, internship search and applications, a step-by-step task guide, GitHub task submissions, and a dynamic weekly activity chart.
+A full-stack internship portal with account registration and login, API-backed internship search, validated applications, reviewer decisions, a step-by-step task guide, GitHub task submissions, and a dynamic weekly activity chart.
 
 ## Requirements
 
@@ -13,7 +13,7 @@ A full-stack internship portal with account registration and login, internship s
 npm install
 ```
 
-Copy `client/.env.example` to `client/.env` and `server/.env.example` to `server/.env` if you need to change the defaults. Then run both applications:
+Copy `client/.env.example` to `client/.env` and `server/.env.example` to `server/.env` if you need to change the defaults. `VITE_API_URL` is the frontend API base URL; `CLIENT_ORIGIN` is the single browser origin allowed by the API. Then run both applications:
 
 ```sh
 npm run dev
@@ -25,7 +25,21 @@ npm run dev
 
 To build the frontend, run `npm run build`. To run backend unit and integration tests, run `npm test`.
 
-The GitHub Pages workflow builds from the `secure-application-integration/` subdirectory and publishes the Vite production output. Pages hosts the frontend only; deploy the Express API separately, set the repository Actions variable `VITE_API_URL` to its public `/api` URL, and configure the API's `CLIENT_ORIGIN` to the deployed Pages origin for the complete application to work online.
+The repository-root GitHub Pages workflow tests and builds from the `secure-application-integration/` subdirectory and publishes `client/dist`. Pages hosts the frontend only; deploy the Express API separately, set the repository Actions variable `VITE_API_URL` to its public `/api` URL, and configure the API's `CLIENT_ORIGIN` to the deployed Pages origin for the complete application to work online. The workflow stops before building if `VITE_API_URL` is missing.
+
+## Application API
+
+Internships load from `GET /api/internships`; the interface includes loading, empty, error, and retry states. Applying requires a signed-in account and sends full name, email, phone, college, course, skills, resume URL, optional portfolio URL, interest message, and internship ID to `POST /api/applications`. The client validates before sending and the API repeats validation, normalizes email/phone input, rejects invalid requests with field errors, and prevents duplicate pending or approved applications. Only signed-in reviewers with the server-configured review key can see applicant details.
+
+Useful commands from this directory:
+
+```sh
+npm run dev
+npm run build
+npm test
+```
+
+The client package has no lint script. The backend tests use Vitest and Supertest. See [API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md), [SECURITY_CHECKLIST.md](docs/SECURITY_CHECKLIST.md), and [TEST_REPORT.md](docs/TEST_REPORT.md) for the endpoint contract and verification status.
 
 Register an account in the portal, then log in with those credentials. Explore internship tracks across frontend, web, app/mobile, backend, IoT, finance/FinTech, data analytics, AI/ML, cloud/DevOps, cybersecurity, and product design. Search by role, company, skill, and location; filter by track category; open any track for guided tasks, step-by-step instructions, skills, and deliverables. Task 04 also includes a beginner guide and downloadable checklist, product brief, and integration test records. Submit a public GitHub repository URL or upload up to five PDF, ZIP, TXT, JSON, PNG, or JPEG files (10 MB each) from the task page after completing its checklist.
 
@@ -33,7 +47,7 @@ Internship applications follow **Apply → Review → Decision → Intern dashbo
 
 ## Project structure
 
-See the `client/`, `server/`, and `docs/` directories. The Task 04 learning materials are in `client/public/`. The API uses in-memory accounts, sessions, internships, applications, and task submission records; this data is cleared when the server restarts. Uploaded files are kept privately in the ignored `server/uploads/` directory and are available only to the account that submitted them.
+See the `client/`, `server/`, and `docs/` directories. The Task 04 learning materials are in `client/public/`. No database or ORM is configured: the API uses in-memory accounts, sessions, internships, applications, and task submission records, cleared when the server restarts. Uploaded files are kept privately in the ignored `server/uploads/` directory and are available only to the account that submitted them. Do not use this demo to collect real applicant information until durable storage and production privacy controls are configured.
 
 ## Security notes
 

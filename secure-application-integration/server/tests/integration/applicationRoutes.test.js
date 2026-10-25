@@ -32,6 +32,11 @@ describe('application routes', () => {
     const response = await request(app).post('/api/applications').set('Authorization', `Bearer ${token}`).send({
       name: 'Aniket Chaudake',
       email: userEmail,
+      phone: '+1 (415) 555-0134',
+      college: 'North Valley University',
+      course: 'BSc Computer Science',
+      skills: 'React, Node.js, API security',
+      resumeUrl: 'https://example.com/resume.pdf',
       portfolioUrl: 'https://example.com',
       message: 'I am excited to apply for this internship opportunity.',
       internshipId: 'internship-1'
@@ -41,6 +46,14 @@ describe('application routes', () => {
     expect(response.body.data.status).toBe('pending');
     expect(response.body.email).toBeUndefined();
     expect(response.body.requestId).toBe(response.headers['x-request-id']);
+
+    const reviewQueue = await request(app).get('/api/applications/review')
+      .set('Authorization', `Bearer ${token}`)
+      .set('X-Review-Key', 'test-review-key');
+    const reviewedApplication = reviewQueue.body.data.find((application) => application.id === response.body.data.id);
+    expect(reviewedApplication.phone).toBe('+14155550134');
+    expect(reviewedApplication.college).toBe('North Valley University');
+    expect(reviewedApplication.resumeUrl).toBe('https://example.com/resume.pdf');
 
     const mine = await request(app).get('/api/applications/mine').set('Authorization', `Bearer ${token}`);
     expect(mine.body.data).toHaveLength(1);
@@ -52,12 +65,16 @@ describe('application routes', () => {
     const response = await request(app).post('/api/applications').set('Authorization', `Bearer ${token}`).send({
       name: 'A',
       email: 'invalid',
+      phone: 'invalid',
       message: 'short',
       internshipId: 'internship-1'
     });
     expect(response.status).toBe(400);
     expect(response.body.error.code).toBe('VALIDATION_ERROR');
     expect(response.body.error.details.length).toBeGreaterThan(0);
+    expect(response.body.error.details.map((detail) => detail.field)).toEqual(
+      expect.arrayContaining(['email', 'phone', 'college', 'course', 'skills', 'resumeUrl'])
+    );
   });
 
   it('returns a safe client error for malformed JSON', async () => {
@@ -74,6 +91,11 @@ describe('application routes', () => {
     const response = await request(app).post('/api/applications').set('Authorization', `Bearer ${token}`).send({
       name: 'Aniket Chaudake',
       email: 'aniket@example.com',
+      phone: '+14155550134',
+      college: 'North Valley University',
+      course: 'BSc Computer Science',
+      skills: 'React and Node.js',
+      resumeUrl: 'https://example.com/resume.pdf',
       message: 'I am excited to apply for this internship opportunity.',
       internshipId: 'missing'
     });
@@ -84,6 +106,11 @@ describe('application routes', () => {
     const payload = {
       name: 'Application Learner',
       email: userEmail,
+      phone: '+14155550134',
+      college: 'North Valley University',
+      course: 'BSc Computer Science',
+      skills: 'React and Node.js',
+      resumeUrl: 'https://example.com/resume.pdf',
       message: 'I would like to learn and contribute to this internship team.',
       internshipId: 'internship-3'
     };
@@ -113,6 +140,11 @@ describe('application routes', () => {
     const submitted = await request(app).post('/api/applications').set('Authorization', `Bearer ${token}`).send({
       name: 'Application Learner',
       email: userEmail,
+      phone: '+14155550134',
+      college: 'North Valley University',
+      course: 'BSc Computer Science',
+      skills: 'React and Node.js',
+      resumeUrl: 'https://example.com/resume.pdf',
       message: 'I would like to learn and contribute to this internship team.',
       internshipId: 'internship-2'
     });

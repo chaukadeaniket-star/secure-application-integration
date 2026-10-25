@@ -33,15 +33,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-          - name: Build React application
+      - name: Require deployed API URL
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
+        run: test -n "$VITE_API_URL"
+
+      - name: Build React application
         run: npm run build
         env:
-          VITE_API_URL: https://secure-application-integration-api.onrender.com/api
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
 
       - name: Upload production build
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./dist
+          path: ./client/dist
 
   deploy:
     needs: build

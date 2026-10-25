@@ -14,25 +14,43 @@ async function request(path, options = {}) {
         ...options.headers
       }
     });
-    const payload = await response.json().catch(() => ({}));
+    const payload = await response.json().catch(() => null);
     if (!response.ok) {
-      const error = new Error(payload.error?.message || 'The request could not be completed.');
+      const error = new Error(payload?.error?.message || 'The request could not be completed.');
       error.status = response.status;
-      error.details = payload.error?.details || [];
+      error.details = payload?.error?.details || [];
       throw error;
     }
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+      throw new Error('The server returned an invalid response. Please try again.');
+    }
     return payload;
+  } catch (error) {
+    if (error instanceof TypeError) {
+      throw new Error('Could not reach the internship API. Check your connection and try again.');
+    }
+    throw error;
   } finally {
     window.clearTimeout(timeoutId);
   }
 }
 
 export const api = {
-  getInternships: (params = {}) => {
+  getInternships: async (params = {}) => {
     const query = new URLSearchParams(params).toString();
-    return request(`/internships${query ? `?${query}` : ''}`);
+    const result = await request(`/internships${query ? `?${query}` : ''}`);
+    if (!Array.isArray(result.data) || !Array.isArray(result.meta?.categories)) {
+      throw new Error('The internships response was incomplete. Please retry.');
+    }
+    return result;
   },
-  getInternship: (id) => request(`/internships/${encodeURIComponent(id)}`),
+  getInternship: async (id) => {
+    const result = await request(`/internships/${encodeURIComponent(id)}`);
+    if (!result.data || typeof result.data !== 'object' || Array.isArray(result.data)) {
+      throw new Error('The internship response was incomplete. Please retry.');
+    }
+    return result;
+  },
   getInternshipCategories: async () => {
     const result = await request('/internships');
     return result.meta.categories;

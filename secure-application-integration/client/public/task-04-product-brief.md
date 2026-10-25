@@ -12,7 +12,7 @@
 
 - `GET /api/internships?search=&location=` returns matching opportunities.
 - `GET /api/internships/:id` returns one opportunity.
-- `POST /api/applications` accepts `name`, `email`, `portfolioUrl`, `message`, and `internshipId`.
+- `POST /api/applications` accepts `name`, `email`, `phone`, `college`, `course`, `skills`, `resumeUrl`, optional `portfolioUrl`, `message`, and `internshipId`.
 - `POST /api/auth/register` creates an account; `POST /api/auth/login` issues a learning-demo session.
 - `POST /api/submissions` records the authenticated learner's Task 04 GitHub URL.
 

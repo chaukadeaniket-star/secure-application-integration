@@ -77,6 +77,9 @@ export default function ReviewApplicationsPage({ token }) {
         {applications.map((application) => (
           <article className="panel review-card" key={application.id}>
             <div className="review-card-heading"><div><span className={`application-status-badge status-${application.status}`}>{application.status}</span><h2>{application.name}</h2><p>{application.email} · Applied {new Date(application.createdAt).toLocaleDateString()}</p></div><strong>{application.internship?.title}</strong></div>
+            <p>{application.phone} · {application.college} · {application.course}</p>
+            <p><strong>Skills:</strong> {application.skills}</p>
+            <p><a href={application.resumeUrl} target="_blank" rel="noreferrer">View resume</a></p>
             <p className="review-message">{application.message}</p>
             {application.portfolioUrl && <a href={application.portfolioUrl} target="_blank" rel="noreferrer">View portfolio</a>}
             {application.status === 'pending' ? <div className="review-actions"><button className="approve-button" type="button" onClick={() => decide(application.id, 'approved')} disabled={Boolean(reviewing)}><Check size={15} /> {reviewing === application.id ? 'Saving…' : 'Approve'}</button><button className="reject-button" type="button" onClick={() => decide(application.id, 'rejected')} disabled={Boolean(reviewing)}><X size={15} /> Decline</button></div> : <p className="reviewed-at"><Clock3 size={13} /> Reviewed {new Date(application.reviewedAt).toLocaleString()}</p>}
