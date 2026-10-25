@@ -33,8 +33,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build React application
+          - name: Build React application
         run: npm run build
+        env:
+          VITE_API_URL: https://secure-application-integration-api.onrender.com/api
 
       - name: Upload production build
         uses: actions/upload-pages-artifact@v4
